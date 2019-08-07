@@ -1,0 +1,61 @@
+<div class="flex bg-white shadow-lg w-full">
+  <div class="w-full py-4 px-6">
+    <%= form_tag(vehicles_path, method: :post) do %>
+      <div class="relative">
+        <%= text_field_tag :vin, @vin, class: "bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal", placeholder: "enter the VIN number..." %>
+        <%= submit_tag "Search", class: "bg-blue-500 hover:bg-blue-800 cursor-pointer text-white font-normal py-3 px-4 rounded focus:outline-none focus:shadow-outline float-right mt-2 absolute", style: "top: -11px; right: 0px;" %>
+    <% end %>
+      </div>
+  </div>
+</div>
+
+<div id="search_results" class="mt-8">
+  <% if @vehicle.nil? %>
+    <div class="text-center">
+      <h2 class="font-extrabold text-4xl text-gray-800">We're sorry, we couldn't find your vehicle</h2>
+      <h4 class="font-bold text-xl text-gray-800 mt-2">Check for typos or try another VIN</h4>
+    </div>
+  <% else %>
+    <div>
+      <h2 class="font-extrabold text-4xl text-gray-800 w-full text-center my-4">
+        We found it!
+      </h2>
+      <div class="flex">
+        <div class="flex container w-3/5 bg-white rounded shadow-2xl p-4 mx-auto">
+          <div class="flex w-2/5">
+            <div class="block bg-gray-100 border-gray-200 h-64 w-full mr-6"></div>
+          </div>
+          <div class="w-3/5">
+            <div class="w-full">
+              <h2 class="font-semibold text-lg">
+                Vehicle - <%= @vehicle.vin %>
+              </h2>
+            </div>
+            <div class="flex mt-4">
+              <div class="w-3/4 text-sm">
+                <ul>
+                  <li class="mb-2"><span class="font-semibold w-16 inline-block">Year:</span> <%= @vehicle.year %></li>
+                  <li class="mb-2"><span class="font-semibold w-16 inline-block">Make:</span> <%= @vehicle.make %></li>
+                  <li class="mb-2"><span class="font-semibold w-16 inline-block">Model:</span> <%= @vehicle.model %></li>
+                </ul>
+              </div>
+              <div class="w-1/2 text-sm">
+                <ul>
+                  <li class="mb-2"><span class="font-semibold w-16 inline-block">Color:</span> <%= @vehicle.color %></li>
+                  <li class="mb-2"><span class="font-semibold w-16 inline-block">mileage:</span> <%= @vehicle.mileage %>/mpg</li>
+                </ul>
+              </ul>
+            </div>
+          </div>
+          <div class="w-full mt-20">
+            <% if @vehicle.persisted? %>
+              <button class="bg-gray-400 cursor-not-allowed text-white font-normal py-3 px-4 rounded focus:outline-none focus:shadow-outline text-sm uppercase w-full text-center" disabled="disabled">Save for later</button>
+            <% else %>
+              <button class="bg-blue-500 hover:bg-blue-800 cursor-pointer text-white font-normal py-3 px-4 rounded focus:outline-none focus:shadow-outline text-sm uppercase w-full text-center">Save for later</button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

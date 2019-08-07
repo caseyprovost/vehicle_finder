@@ -8,12 +8,12 @@
         </p>
       </div>
       <div class="landing-search-form w-2/3 py-8">
-        <form action="#">
+        <%= form_tag(vehicles_path, method: :post) do %>
           <div>
-            <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg mt-6 py-2 px-4 block w-full appearance-none leading-normal" id="search" type="text" placeholder="enter the VIN number...">
+            <%= text_field_tag :vin, nil, class: "bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg mt-6 py-2 px-4 block w-full appearance-none leading-normal", placeholder: "enter the VIN number..." %>
           </div>
-          <input type="submit" class="bg-blue-500 hover:bg-blue-800 cursor-pointer text-white font-normal py-2 px-4 rounded focus:outline-none focus:shadow-outline float-right mt-2" value="Search" />
-        </form>
+          <input type="submit" class="bg-blue-500 hover:bg-blue-800 cursor-pointer text-white font-normal py-2 px-4 rounded focus:outline-none focus:shadow-outline float-right mt-2" value="Search" id="search_submit" />
+        <% end %>
       </div>
     </div>
   </div>

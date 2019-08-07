@@ -31,5 +31,11 @@ module FleetioInventorySearch
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.generators do |generate|
+      generate.helper false
+      generate.assets false
+      generate.view_specs false
+    end
   end
 end
