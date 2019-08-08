@@ -21,8 +21,9 @@ RSpec.describe "Landing Page", type: :system do
     context 'and they search for a vehicle' do
       context 'and nothing is found' do
         before do
-          stub_request(:get, "https://secure.fleetio.com/api/v1/vehicles?q%5Bvin_eq%5D=#{vin}").
+          stub_request(:get, "https://secure.fleetio.com/api/v1/vehicles").
             with(
+              query: { q: { vin_eq: vin } },
               headers: {
                 'Accept'=>'application/json',
                 'Account-Token'=>'FAKE',

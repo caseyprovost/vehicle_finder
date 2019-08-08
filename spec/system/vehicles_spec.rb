@@ -1,0 +1,80 @@
+require "rails_helper"
+
+def stub_credential(key, value)
+  allow(Rails.application).to receive(:credentials).and_return(OpenStruct.new(key.to_sym => value))
+end
+
+RSpec.describe "Landing Page", type: :system do
+  before do
+    stub_credential(:fleetio, { auth_token: "FAKE", account_token: "FAKE" })
+    visit '/vehicles'
+  end
+
+  context "initial state" do
+    it 'prompts the user to get started' do
+      expect(page).to have_content("Get started by searching above")
+    end
+  end
+
+  context 'user execute a search' do
+    context 'and nothing is found' do
+      before do
+        stub_request(:get, "https://secure.fleetio.com/api/v1/vehicles").
+          with(
+            query: { q: { vin_eq: vin } },
+            headers: {
+              'Accept'=>'application/json',
+              'Account-Token'=>'FAKE',
+              'Authorization'=>'Token token="FAKE"',
+              'Content-Type'=>'application/json'
+            }).to_return(status: 200, body: [].to_json, headers: { "Content-Type"=> "application/json" })
+
+        fill_in 'vin', with: vin
+        click_button 'Search'
+      end
+
+      let(:vin) { Faker::Vehicle.vin }
+
+      it 'takes the user to the search results page' do
+        expect(current_path).to include(search_vehicles_path)
+      end
+
+      it 'informs the user there are no search results' do
+        expect(page).to have_content("We're sorry, we couldn't find your vehicle")
+      end
+    end
+
+    context 'and a vehicle is found' do
+      let!(:vin) { Faker::Vehicle.vin }
+      let(:fleetio_vehicle) { { id: 1, make: 'Ford', model: 'F-150', year: '2010', color: 'red', vin: vin} }
+
+      before do
+        stub_request(:get, "https://secure.fleetio.com/api/v1/vehicles").
+          with(
+            query: { q: { vin_eq: vin } },
+            headers: {
+              'Accept'=>'application/json',
+              'Account-Token'=>'FAKE',
+              'Authorization'=>'Token token="FAKE"',
+              'Content-Type'=>'application/json'
+            }).to_return(status: 200, body: [fleetio_vehicle].to_json, headers: { "Content-Type"=> "application/json" })
+
+        fill_in 'vin', with: vin
+        click_button 'Search'
+      end
+
+      it 'takes the user to the search results page' do
+        expect(current_path).to include(search_vehicles_path)
+      end
+
+      it 'displays the search results' do
+        expect(page).to have_content("We found it!")
+        within('#search_results') do
+          expect(page).to have_content(fleetio_vehicle[:make])
+          expect(page).to have_content(fleetio_vehicle[:model])
+          expect(page).to have_content(fleetio_vehicle[:vin])
+        end
+      end
+    end
+  end
+end

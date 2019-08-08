@@ -1,11 +1,11 @@
 class VehiclesController < ApplicationController
   def index
-    if params[:vin]
-      session[:vin] = params[:vin]
-    end
-
     @vin = session[:vin]
-    @remote_vehicle = fleetio_client.find_vehicle_by_vin(session[:vin]).first
+    @remote_vehicle = nil
+
+    if @vin.present?
+      @remote_vehicle = Fleetio.client.find_vehicle_by_vin(session[:vin])
+    end
 
     if @remote_vehicle.present?
       @vehicle = Vehicle.new(@remote_vehicle.slice("make", "model", "color", "vin", "year"))
@@ -13,15 +13,8 @@ class VehiclesController < ApplicationController
     end
   end
 
-  def show
-  end
-
-  private
-
-  def fleetio_client
-    @fleetio_client ||= Fleetio.new(
-      Rails.application.credentials.fleetio[:auth_token],
-      Rails.application.credentials.fleetio[:account_token]
-    )
+  def search
+    session[:vin] = params[:vin]
+    index
   end
 end
