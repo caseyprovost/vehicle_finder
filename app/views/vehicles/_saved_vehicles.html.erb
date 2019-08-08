@@ -1,0 +1,29 @@
+<div class="flex fixed w-4/12 right-0" style="top: 234px; min-height: 290px; right: 1em;" id="saved_vehicles">
+  <div class="border-gray-200 w-full shadow-2xl bg-white rounded">
+    <h2 class="font-semibold bg-blue-800 text-white p-4">Your Vehicles</h2>
+
+    <% if vehicles.any? %>
+      <ul class="px-4 py-2">
+        <% vehicles.each do |vehicle|%>
+          <li class="px-4 py-2 my-2 border-b border-gray-200">
+            <%= link_to vehicle.name, "#", class: "text-blue-500 hover:text-blue-800" %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="flex bg-gray-100 m-2 p-2 border-dashed border-gray-300 border-2 text-gray-700 h-56">
+        <% if user.present? %>
+          <p class="my-auto text-center w-full text-lg">
+            Nothing here yet. <br />
+            Start saving some vehicles!
+          </p>
+        <% else %>
+          <p class="my-auto text-center w-full text-lg">
+            Log in or create an account <br />
+            to start saving vehicles
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

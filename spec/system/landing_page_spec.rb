@@ -43,7 +43,8 @@ RSpec.describe "Landing Page", type: :system do
         end
 
         it "informs the user there are no search results" do
-          expect(page).to have_content("We're sorry, we couldn't find your vehicle")
+          expect(page).to have_content("We're sorry")
+          expect(page).to have_content("A vehicle couldn't be found")
         end
       end
 

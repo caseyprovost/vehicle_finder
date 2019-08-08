@@ -8,4 +8,6 @@ Rails.application.routes.draw do
       post :search
     end
   end
+
+  resources :user_vehicles, only: [:create]
 end

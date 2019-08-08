@@ -12,7 +12,8 @@ RSpec.describe "Landing Page", type: :system do
 
   context "initial state" do
     it "prompts the user to get started" do
-      expect(page).to have_content("Get started by searching above")
+      expect(page).to have_content("Nothing to see here")
+      expect(page).to have_content("Start by searching above")
     end
   end
 
@@ -41,7 +42,8 @@ RSpec.describe "Landing Page", type: :system do
       end
 
       it "informs the user there are no search results" do
-        expect(page).to have_content("We're sorry, we couldn't find your vehicle")
+        expect(page).to have_content("We're sorry")
+        expect(page).to have_content("A vehicle couldn't be found")
       end
     end
 
@@ -70,7 +72,7 @@ RSpec.describe "Landing Page", type: :system do
       end
 
       it "displays the search results" do
-        expect(page).to have_content("We found it!")
+        expect(page).to have_selector("#vehicle_card")
         within("#search_results") do
           expect(page).to have_content(fleetio_vehicle[:make])
           expect(page).to have_content(fleetio_vehicle[:model])

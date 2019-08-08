@@ -1,0 +1,46 @@
+<div class="flex" id="vehicle_card">
+  <div class="flex w-3/5 bg-white rounded shadow-2xl p-4">
+    <div class="flex w-2/5">
+      <div class="block bg-gray-100 border-gray-200 h-64 w-full mr-6"></div>
+    </div>
+    <div class="w-3/5">
+      <div class="w-full">
+        <h2 class="font-semibold text-lg">
+          Vehicle - <%= vehicle.vin %>
+        </h2>
+      </div>
+      <div class="flex mt-4">
+        <div class="w-3/4 text-sm">
+          <ul>
+            <li class="mb-2"><span class="font-semibold w-16 inline-block">Year:</span> <%= vehicle.year %></li>
+            <li class="mb-2"><span class="font-semibold w-16 inline-block">Make:</span> <%= vehicle.make %></li>
+            <li class="mb-2"><span class="font-semibold w-16 inline-block">Model:</span> <%= vehicle.model %></li>
+          </ul>
+        </div>
+        <div class="w-1/2 text-sm">
+          <ul>
+            <li class="mb-2"><span class="font-semibold w-16 inline-block">Color:</span> <%= vehicle.color %></li>
+            <li class="mb-2">
+              <span class="font-semibold w-16 inline-block">mileage:</span>
+              <% if vehicle.persisted? %>
+                <%= vehicle.mileage %>/mpg
+              <% else %>
+                TBD
+              <% end %>
+            </li>
+          </ul>
+        </ul>
+      </div>
+    </div>
+    <div class="w-full mt-20">
+      <%= form_with model: UserVehicle.new(user: user), remote: false, class: "nifty_form" do |f| %>
+        <% if allow_save %>
+          <%= f.submit "Save for later", class: "bg-blue-500 hover:bg-blue-800 cursor-pointer text-white font-normal py-3 px-4 rounded focus:outline-none focus:shadow-outline text-sm uppercase w-full text-center" %>
+        <% else %>
+          <%= f.submit "Save for later", class: "bg-gray-400 cursor-not-allowed text-white font-normal py-3 px-4 rounded focus:outline-none focus:shadow-outline text-sm uppercase w-full text-center", disabled: true %>
+        <% end %>
+        <%= f.hidden_field :vehicle_id, value: vehicle.id %>
+      <% end %>
+    </div>
+  </div>
+</div>

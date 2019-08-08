@@ -19,7 +19,7 @@
       </div>
     <% else %>
       <span class="text-white inline-block border-r border-white pr-4 mr-4">Welcome, <%= current_user.name %></span>
-      <%= link_to "Log out", user_session_path, method: :delete, class: "inline-block text-xs px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 uppercase font-semibold" %>
+      <%= link_to "Log out", destroy_user_session_path, class: "inline-block text-xs px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 uppercase font-semibold" %>
       </div>
     <% end %>
   </div>
