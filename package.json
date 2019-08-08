@@ -1,6 +1,9 @@
 {
   "name": "fleetio_inventory_search",
   "private": true,
+  "scripts": {
+    "postinstall": "npm rebuild node-sass"
+  },
   "dependencies": {
     "@rails/actioncable": "^6.0.0-alpha",
     "@rails/activestorage": "^6.0.0-alpha",
