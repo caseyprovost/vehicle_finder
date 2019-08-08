@@ -1,5 +1,17 @@
 class VehiclesController < ApplicationController
   def index
+    setup_view_context
+  end
+
+  def search
+    session[:vin] = params[:vin]
+    setup_view_context
+    render :index
+  end
+
+  private
+
+  def setup_view_context
     @vin = session[:vin]
     @remote_vehicle = nil
 
@@ -11,10 +23,5 @@ class VehiclesController < ApplicationController
       @vehicle = Vehicle.new(@remote_vehicle.slice("make", "model", "color", "vin", "year"))
       @vehicle.fleetio_id = @remote_vehicle["id"]
     end
-  end
-
-  def search
-    session[:vin] = params[:vin]
-    index
   end
 end

@@ -12,13 +12,15 @@
     <div class="text-sm lg:flex-grow"></div>
     <% if current_user.nil? %>
       <div>
-        <a href="#" class="inline-block text-xs px-4 py-2 leading-none text-white hover:text-blue-500 mt-4 lg:mt-0 uppercase  font-semibold">Log in</a>
+        <%= link_to "Log in", new_user_session_path, class: "inline-block text-xs px-4 py-2 leading-none text-white hover:text-blue-500 mt-4 lg:mt-0 uppercase font-semibold" %>
       </div>
       <div>
-        <a href="#" class="inline-block text-xs px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 uppercase font-semibold">Sign Up</a>
+        <%= link_to "Sign Up", new_user_registration_path, class: "inline-block text-xs px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 uppercase font-semibold" %>
       </div>
     <% else %>
-      You are logged in
+      <span class="text-white inline-block border-r border-white pr-4 mr-4">Welcome, <%= current_user.name %></span>
+      <%= link_to "Log out", user_session_path, method: :delete, class: "inline-block text-xs px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 uppercase font-semibold" %>
+      </div>
     <% end %>
   </div>
 </nav>
