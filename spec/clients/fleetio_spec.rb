@@ -5,21 +5,21 @@ RSpec.describe Fleetio do
   let(:client) { Fleetio.new("FAKE", "FAKE") }
   let(:expected_headers) do
     {
-      'Accept'        =>'application/json',
-      'Account-Token' =>'FAKE',
-      'Authorization' =>'Token token="FAKE"',
-      'Content-Type'  =>'application/json'
+      "Accept" => "application/json",
+      "Account-Token" => "FAKE",
+      "Authorization" => 'Token token="FAKE"',
+      "Content-Type" => "application/json",
     }
   end
 
   describe "handle_response" do
     context "when the request is successful" do
       let(:response) do
-        instance_double(HTTParty::Response, parsed_response: [{ foo: 'bar' }], code: 200)
+        instance_double(HTTParty::Response, parsed_response: [{foo: "bar"}], code: 200)
       end
 
-      it 'returns the parsed response' do
-        expect(client.send(:handle_response, response)).to eq([{ foo: 'bar' }])
+      it "returns the parsed response" do
+        expect(client.send(:handle_response, response)).to eq([{foo: "bar"}])
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe Fleetio do
         instance_double(HTTParty::Response, parsed_response: "", code: 403)
       end
 
-      it 'raises an api error' do
+      it "raises an api error" do
         expect { client.send(:handle_response, response) }.to raise_error(Fleetio::ApiError)
       end
     end
@@ -38,17 +38,17 @@ RSpec.describe Fleetio do
     let(:fleetio_vehicle) { build_fleetio_vehicle }
 
     before do
-      stub_request(:get, "#{fleetio_url}/vehicles").
-        with(
+      stub_request(:get, "#{fleetio_url}/vehicles")
+        .with(
           headers: expected_headers
         ).to_return(
           status: 200,
           body: [fleetio_vehicle].to_json,
-          headers: { "Content-Type"=> "application/json" }
+          headers: {"Content-Type" => "application/json"}
         )
     end
 
-    it 'returns an array of vehicle hashes' do
+    it "returns an array of vehicle hashes" do
       response = client.vehicles
       expect(response.first).to eq(fleetio_vehicle)
     end
@@ -60,18 +60,18 @@ RSpec.describe Fleetio do
 
     context "when a record is found" do
       before do
-        stub_request(:get, "#{fleetio_url}/vehicles").
-          with(
-            query: { q: { vin_eq: vin } },
+        stub_request(:get, "#{fleetio_url}/vehicles")
+          .with(
+            query: {q: {vin_eq: vin}},
             headers: expected_headers
           ).to_return(
             status: 200,
             body: [fleetio_vehicle].to_json,
-            headers: { "Content-Type"=> "application/json" }
+            headers: {"Content-Type" => "application/json"}
           )
       end
 
-      it 'return the first vehicle' do
+      it "return the first vehicle" do
         response = client.find_vehicle_by_vin(vin)
         expect(response).to eq(fleetio_vehicle)
       end
@@ -79,18 +79,18 @@ RSpec.describe Fleetio do
 
     context "when a record is not found" do
       before do
-        stub_request(:get, "#{fleetio_url}/vehicles").
-          with(
-            query: { q: { vin_eq: vin } },
+        stub_request(:get, "#{fleetio_url}/vehicles")
+          .with(
+            query: {q: {vin_eq: vin}},
             headers: expected_headers
           ).to_return(
             status: 200,
             body: [].to_json,
-            headers: { "Content-Type"=> "application/json" }
+            headers: {"Content-Type" => "application/json"}
           )
       end
 
-      it 'returns nil' do
+      it "returns nil" do
         response = client.find_vehicle_by_vin(vin)
         expect(response).to be_nil
       end

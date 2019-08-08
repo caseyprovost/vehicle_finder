@@ -1,6 +1,6 @@
 class Fleetio
   include HTTParty
-  base_uri 'https://secure.fleetio.com/api/v1/'
+  base_uri "https://secure.fleetio.com/api/v1/"
 
   class ApiError < StandardError; end
 
@@ -28,7 +28,7 @@ class Fleetio
   def find_vehicle_by_vin(vin)
     response = self.class.get("/vehicles", {
       headers: default_headers,
-      query: { q: { vin_eq: vin } },
+      query: {q: {vin_eq: vin}},
       debug_output: STDOUT,
     })
 
@@ -48,10 +48,10 @@ class Fleetio
 
   def default_headers
     @default_headers ||= {
-      "Content-Type"  => "application/json",
-      "Accept"        => "application/json",
+      "Content-Type" => "application/json",
+      "Accept" => "application/json",
       "Authorization" => "Token token=\"#{@auth_token}\"",
-      "Account-Token" => @account_token
+      "Account-Token" => @account_token,
     }
   end
 end

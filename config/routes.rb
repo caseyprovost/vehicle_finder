@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'landing#show'
+  root "landing#show"
   get "/vehicles/search" => redirect("/vehicles")
 
   resources :vehicles, only: [:index] do
