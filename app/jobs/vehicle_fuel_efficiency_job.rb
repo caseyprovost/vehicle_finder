@@ -12,8 +12,6 @@ class VehicleFuelEfficiencyJob < ApplicationJob
     mileage_sum = calculate_sum(fuel_entries, "usage_in_mi")
 
     if valid_number?(gallons_sum) && valid_number?(mileage_sum)
-
-    end
       vehicle.update!(fuel_efficiency: gallons_sum / mileage_sum)
     end
   end
@@ -21,7 +19,7 @@ class VehicleFuelEfficiencyJob < ApplicationJob
   private
 
   def valid_number?(number)
-    number.present? && number > 0
+    number.present? && !number.zero?
   end
 
   def calculate_sum(fuel_entries, attribute)

@@ -32,10 +32,10 @@ RSpec.describe VehicleFuelEfficiencyJob, type: :job do
         expect(Fleetio.client).to receive(:total_vehicle_fuel_entries).with(vehicle.fleetio_id).and_return(new_fuel_entries)
       end
 
-      it "calculate and stores the vehicle's fuel efficiency" do
+      it "does not update the fuel efficiency" do
         perform_enqueued_jobs do
           job
-          expect(vehicle.reload.fuel_efficiency).to be_present
+          expect(vehicle.reload.fuel_efficiency).to be_nil
         end
       end
     end
