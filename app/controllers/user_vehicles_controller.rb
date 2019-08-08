@@ -6,6 +6,7 @@ class UserVehiclesController < ApplicationController
       flash[:success] = "Your vehicle was successfully saved"
       redirect_to vehicles_path
     else
+      # TODO: do something on failure
       # render errors
     end
   end

@@ -20,17 +20,7 @@ RSpec.describe "Landing Page", type: :system do
   context "user execute a search" do
     context "and nothing is found" do
       before do
-        stub_request(:get, "https://secure.fleetio.com/api/v1/vehicles")
-          .with(
-            query: {q: {vin_eq: vin}},
-            headers: {
-              "Accept" => "application/json",
-              "Account-Token" => "FAKE",
-              "Authorization" => 'Token token="FAKE"',
-              "Content-Type" => "application/json",
-            }
-          ).to_return(status: 200, body: [].to_json, headers: {"Content-Type" => "application/json"})
-
+        expect(ProvideVehicle).to receive(:execute).with(vin).and_return(nil)
         fill_in "vin", with: vin
         click_button "Search"
       end
@@ -52,16 +42,7 @@ RSpec.describe "Landing Page", type: :system do
       let(:fleetio_vehicle) { {id: 1, make: "Ford", model: "F-150", year: "2010", color: "red", vin: vin} }
 
       before do
-        stub_request(:get, "https://secure.fleetio.com/api/v1/vehicles")
-          .with(
-            query: {q: {vin_eq: vin}},
-            headers: {
-              "Accept" => "application/json",
-              "Account-Token" => "FAKE",
-              "Authorization" => 'Token token="FAKE"',
-              "Content-Type" => "application/json",
-            }
-          ).to_return(status: 200, body: [fleetio_vehicle].to_json, headers: {"Content-Type" => "application/json"})
+        expect(ProvideVehicle).to receive(:execute).with(vin).and_return(create(:vehicle, fleetio_vehicle))
 
         fill_in "vin", with: vin
         click_button "Search"

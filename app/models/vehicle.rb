@@ -11,10 +11,6 @@ class Vehicle < ApplicationRecord
     end
   end
 
-  def mileage
-    32
-  end
-
   def name
     "#{year} #{make} #{model}"
   end

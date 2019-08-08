@@ -1,5 +1,8 @@
 class Fleetio
   include HTTParty
+
+  attr_reader :last_response
+
   base_uri "https://secure.fleetio.com/api/v1/"
 
   class ApiError < StandardError; end
@@ -25,6 +28,37 @@ class Fleetio
     handle_response(response)
   end
 
+  def vehicle_fuel_entries(vehicle_id)
+    response = self.class.get("/vehicles/#{vehicle_id}/fuel_entries", {
+      headers: default_headers,
+      debug_output: STDOUT,
+    })
+
+    handle_response(response)
+  end
+
+  def total_vehicle_fuel_entries(vehicle_id)
+    initial_response = self.class.get("/vehicles/#{vehicle_id}/fuel_entries", {
+      headers: default_headers.merge("X-Pagination-Current-Page" => "1"),
+      debug_output: STDOUT,
+    })
+
+    total_pages = initial_response.headers["x-pagination-total-pages"].to_i
+    entries = handle_response(initial_response)
+    return entries if total_pages < 2
+
+    (2..total_pages).each do |page_number|
+      response = self.class.get("/vehicles/#{vehicle_id}/fuel_entries", {
+        headers: default_headers.merge("X-Pagination-Current-Page" => page_number.to_s),
+        debug_output: STDOUT,
+      })
+
+      entries = entries.concat(handle_response(response))
+    end
+
+    entries
+  end
+
   def find_vehicle_by_vin(vin)
     response = self.class.get("/vehicles", {
       headers: default_headers,
@@ -38,6 +72,8 @@ class Fleetio
   private
 
   def handle_response(response)
+    @last_response = response
+
     case response.code
     when 200..205
       response.parsed_response

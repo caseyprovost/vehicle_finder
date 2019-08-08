@@ -54,6 +54,84 @@ RSpec.describe Fleetio do
     end
   end
 
+  describe "#vehicle_fuel_entries" do
+    let(:fleetio_vehicle) { build_fleetio_vehicle }
+    let(:fleetio_fuel_entries) { build_fleetio_fuel_entries(fleetio_vehicle["id"], 3) }
+
+    before do
+      stub_request(:get, "#{fleetio_url}/vehicles/#{fleetio_vehicle["id"]}/fuel_entries")
+        .with(
+          headers: expected_headers
+        ).to_return(
+          status: 200,
+          body: fleetio_fuel_entries.to_json,
+          headers: {"Content-Type" => "application/json"}
+        )
+    end
+
+    it "returns an array of fuel entry hashes" do
+      response = client.vehicle_fuel_entries(fleetio_vehicle["id"])
+      expect(response.count).to eq(3)
+      expect(response.first).to have_key("id")
+      expect(response.first).to have_key("vehicle_id")
+      expect(response.first).to have_key("us_gallons")
+      expect(response.first).to have_key("usage_in_mi")
+    end
+  end
+
+  describe "#total_vehicle_fuel_entries" do
+    let(:fleetio_vehicle) { build_fleetio_vehicle }
+    let(:page_1_fuel_entries) { build_fleetio_fuel_entries(fleetio_vehicle["id"], 3) }
+    let(:page_2_fuel_entries) { build_fleetio_fuel_entries(fleetio_vehicle["id"], 3) }
+    let(:page_3_fuel_entries) { build_fleetio_fuel_entries(fleetio_vehicle["id"], 3) }
+
+    before do
+      stub_request(:get, "#{fleetio_url}/vehicles/#{fleetio_vehicle["id"]}/fuel_entries")
+        .with(
+          headers: expected_headers.merge("X-Pagination-Current-Page" => "1")
+        ).to_return(
+          status: 200,
+          body: page_1_fuel_entries.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+            "X-Pagination-Total-Pages" => "3",
+            "X-Pagination-Current-Page" => "1",
+          }
+        )
+
+      stub_request(:get, "#{fleetio_url}/vehicles/#{fleetio_vehicle["id"]}/fuel_entries")
+        .with(
+          headers: expected_headers.merge("X-Pagination-Current-Page" => "2")
+        ).to_return(
+          status: 200,
+          body: page_2_fuel_entries.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+            "X-Pagination-Total-Pages" => "3",
+            "X-Pagination-Current-Page" => "2",
+          }
+        )
+
+      stub_request(:get, "#{fleetio_url}/vehicles/#{fleetio_vehicle["id"]}/fuel_entries")
+        .with(
+          headers: expected_headers.merge("X-Pagination-Current-Page" => "3")
+        ).to_return(
+          status: 200,
+          body: page_3_fuel_entries.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+            "X-Pagination-Total-Pages" => "3",
+            "X-Pagination-Current-Page" => "3",
+          }
+        )
+    end
+
+    it "returns all the pages of fuel entries" do
+      response = client.total_vehicle_fuel_entries(fleetio_vehicle["id"])
+      expect(response.count).to eq(9)
+    end
+  end
+
   describe "#find_vehicle_by_vin" do
     let(:fleetio_vehicle) { build_fleetio_vehicle }
     let(:vin) { fleetio_vehicle["vin"] }

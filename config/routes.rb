@@ -3,6 +3,11 @@ Rails.application.routes.draw do
   root "landing#show"
   get "/vehicles/search" => redirect("/vehicles")
 
+  if Rails.env.development?
+    require "sidekiq/web"
+    mount Sidekiq::Web => "/sidekiq"
+  end
+
   resources :vehicles, only: [:index] do
     collection do
       post :search

@@ -14,26 +14,13 @@ class VehiclesController < ApplicationController
   private
 
   def allow_save?
-    @vehicle.present? && current_user.present? && !current_user.vehicles.where(id: @vehicle.id).exists?
+    @allow_save ||= @vehicle.present? && current_user.present? && !current_user.vehicles.where(id: @vehicle.id).exists?
   end
 
   def setup_view_context
     @vin = session[:vin]
     @remote_vehicle = nil
-
-    if @vin.present?
-      @vehicle = Vehicle.find_by(vin: @vin)
-    end
-
-    if @vehicle.nil? && @vin.present?
-      @remote_vehicle = Fleetio.client.find_vehicle_by_vin(session[:vin])
-
-      if @remote_vehicle
-        @vehicle = Vehicle.build_from_fleetio_vehicle(@remote_vehicle)
-        @vehicle.save!
-      end
-    end
-
+    @vehicle = @vin.present? ? ProvideVehicle.execute(@vin) : nil
     @saved_vehicles = current_user.present? ? current_user.vehicles : []
   end
 end

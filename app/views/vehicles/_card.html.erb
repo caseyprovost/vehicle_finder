@@ -21,9 +21,9 @@
           <ul>
             <li class="mb-2"><span class="font-semibold w-16 inline-block">Color:</span> <%= vehicle.color %></li>
             <li class="mb-2">
-              <span class="font-semibold w-16 inline-block">mileage:</span>
-              <% if vehicle.persisted? %>
-                <%= vehicle.mileage %>/mpg
+              <span class="font-semibold w-16 inline-block">Fuel Eff:</span>
+              <% if vehicle.fuel_efficiency.present? %>
+                <%= vehicle.fuel_efficiency %>
               <% else %>
                 TBD
               <% end %>
