@@ -1,6 +1,6 @@
 # README
 
-URL: https://vehicle-finder.herokuapp.com/vehicles
+URL: https://vehicle-finder.herokuapp.com
 
 ## Welcome to the Vehicle Finder
 
